@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Calculadora de Riesgo Cardiovascular</title>
+</head>
+<body>
+
+<h1>Calculadora de Riesgo Cardiovascular</h1>
+
+<label for="edad">Edad:</label>
+<input type="number" id="edad" name="edad"><br><br>
+
+<label for="sexo">Sexo:</label>
+<select id="sexo" name="sexo">
+  <option value="masculino">Masculino</option>
+  <option value="femenino">Femenino</option>
+</select><br><br>
+
+<label for="fumador">¿Fuma?:</label>
+<select id="fumador" name="fumador">
+  <option value="si">Sí</option>
+  <option value="no">No</option>
+</select><br><br>
+
+<label for="colesterol">Colesterol total (mg/dl):</label>
+<input type="number" id="colesterol" name="colesterol"><br><br>
+
+<label for="hdl">Colesterol HDL (mg/dl):</label>
+<input type="number" id="hdl" name="hdl"><br><br>
+
+<label for="presion">Presión arterial sistólica (mmHg):</label>
+<input type="number" id="presion" name="presion"><br><br>
+
+<button onclick="calcularRiesgoCardiovascular()">Calcular Riesgo</button>
+
+<p id="resultado"></p>
+
+<script>
+function calcularRiesgoCardiovascular() {
+  var edad = parseInt(document.getElementById("edad").value);
+  var sexo = document.getElementById("sexo").value;
+  var fumador = document.getElementById("fumador").value;
+  var colesterol = parseInt(document.getElementById("colesterol").value);
+  var hdl = parseInt(document.getElementById("hdl").value);
+  var presion = parseInt(document.getElementById("presion").value);
+
+  // Aquí puedes implementar el cálculo del riesgo cardiovascular utilizando la información ingresada.
+  // Puedes usar diferentes modelos de cálculo, como el de Framingham o el SCORE.
+  // Este es solo un ejemplo básico y no incluye un cálculo real del riesgo.
+
+  var resultado = "El cálculo del riesgo cardiovascular no está implementado en este ejemplo.";
+
+  document.getElementById("resultado").innerHTML = resultado;
+}
+</script>
+
+</body>
+</html>
