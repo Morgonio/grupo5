@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Días Fértiles</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fde4ec; /* Fondo rosado suave */
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+            display: inline-block;
+            max-width: 400px;
+            width: 100%;
+        }
+        h1 {
+            color: #d63384;
+            font-size: 22px;
+        }
+        .image-container {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .image-container img {
+            width: 100px;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 7px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+        button {
+            background-color: #d63384;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        button:hover {
+            background-color: #b82c72;
+        }
+        #resultado {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #b82c72;
+        }
+        .info {
+            font-size: 14px;
+            color: #666;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="image-container">
+            <img src="https://static.vecteezy.com/system/resources/previews/002/204/031/non_2x/ovulation-concept-illustration-female-fertility-getting-pregnant-vector.jpg" alt="Calendario fértil">
+        </div>
+
+        <h1>Calculadora de Días Fértiles</h1>
+
+        <label for="fum">📅 Fecha de Última Menstruación (FUM):</label>
+        <input type="date" id="fum" name="fum"><br>
+        
+        <label for="ciclo">🔄 Duración del ciclo menstrual (días):</label>
+        <input type="number" id="ciclo" name="ciclo"><br>
+        
+        <button id="calcularBtn" onclick="calcularDiasFertiles()">🩺 Calcular Días Fértiles</button>
+        <button id="volverBtn" style="display:none;" onclick="volverACalcular()">🔄 Volver a Calcular</button>
+        
+        <p id="resultado"></p>
+
+        <p class="info">💡 Recuerda que esta es solo una estimación y no un método anticonceptivo.</p>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Asegurarse de que los campos están vacíos al inicio
+            document.getElementById("fum").value = "";
+            document.getElementById("ciclo").value = "";
+        });
+
+        function calcularDiasFertiles() {
+            var fum = document.getElementById("fum").value;
+            var ciclo = parseInt(document.getElementById("ciclo").value);
+
+            if (fum === "") {
+                alert("⚠️ Por favor, ingresa la fecha de última menstruación.");
+                return;
+            }
+
+            if (isNaN(ciclo) || ciclo <= 0) {
+                alert("⚠️ Por favor, ingresa una duración de ciclo válida.");
+                return;
+            }
+
+            var fechaFUM = new Date(fum);
+            var diaOvulacion = new Date(fechaFUM.getTime() + (ciclo - 14) * 24 * 60 * 60 * 1000);
+            var diasFertilesInicio = new Date(diaOvulacion.getTime() - 2 * 24 * 60 * 60 * 1000);
+            var diasFertilesFin = new Date(diaOvulacion.getTime() + 2 * 24 * 60 * 60 * 1000);
+
+            var resultado = "📆 Tus días fértiles son del <strong>" + diasFertilesInicio.toLocaleDateString() + "</strong> al <strong>" + diasFertilesFin.toLocaleDateString() + "</strong>.";
+            document.getElementById("resultado").innerHTML = resultado;
+
+            // Ocultar botón Calcular y mostrar el botón Volver a Calcular
+            document.getElementById("calcularBtn").style.display = "none";
+            document.getElementById("volverBtn").style.display = "inline-block";
+        }
+
+        function volverACalcular() {
+            // Restablecer los campos y ocultar el resultado
+            document.getElementById("fum").value = "";
+            document.getElementById("ciclo").value = "";
+            document.getElementById("resultado").innerHTML = "";
+
+            // Mostrar el botón Calcular y ocultar el botón Volver a Calcular
+            document.getElementById("calcularBtn").style.display = "inline-block";
+            document.getElementById("volverBtn").style.display = "none";
+        }
+    </script>
+</body>
+</html>
