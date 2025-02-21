@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Dosis de Medicamentos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e1f5fe;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 50px;
+            border-radius: 7px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            display: inline-block;
+            max-width: 500px;
+            width: 95%;
+            border: 5px solid #e1f5fe;
+        }
+        h1 {
+            color: #0288d1;
+            font-size: 24px;
+        }
+        .icon {
+            font-size: 40px;
+            color: #0288d1;
+        }
+        label {
+            font-size: 16px;
+            margin-top: 10px;
+            color: #000000;
+        }
+        input, button {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #81d4fa;
+            font-size: 16px;
+        }
+        button {
+            background-color: #039be5;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        button:hover {
+            background-color: #0288d1;
+        }
+        #resultado {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #039be5;
+        }
+        .numero-rojo {
+            color: #f44336;
+        }
+        #btnRecalcular {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">💊</div>
+        <h1>Calculadora de Dosis de Medicamentos</h1>
+        <label for="peso">Peso del paciente (kg):</label>
+        <input type="number" id="peso" name="peso"><br><br>
+        <label for="concentracion">Concentración del medicamento (mg/ml):</label>
+        <input type="number" id="concentracion" name="concentracion"><br><br>
+        <label for="dosis">Dosis recomendada (mg/kg):</label>
+        <input type="number" id="dosis" name="dosis"><br><br>
+        <button id="btnCalcular" onclick="calcularDosisMedicamento()">Calcular Dosis</button>
+        <button id="btnRecalcular" onclick="resetearFormulario()">Volver a Calcular</button>
+        <p id="resultado"></p>
+        <p class="info">⚠️Recuerda siempre consultar con un profesional de la salud antes de administrar cualquier medicamento.</p>
+    </div>
+    <script>
+        function calcularDosisMedicamento() {
+            var peso = document.getElementById("peso").value;
+            var concentracion = document.getElementById("concentracion").value;
+            var dosisRecomendada = document.getElementById("dosis").value;
+
+            if (peso === "" || concentracion === "" || dosisRecomendada === "") {
+                alert("Por favor, ingresa todos los valores.");
+                return;
+            }
+
+            peso = parseFloat(peso);
+            concentracion = parseFloat(concentracion);
+            dosisRecomendada = parseFloat(dosisRecomendada);
+
+            if (isNaN(peso) || isNaN(concentracion) || isNaN(dosisRecomendada) || peso <= 0 || concentracion <= 0 || dosisRecomendada <= 0) {
+                alert("Por favor, ingresa valores válidos.");
+                return;
+            }
+
+            var dosisTotal = peso * dosisRecomendada;
+            var volumen = dosisTotal / concentracion;
+
+            document.getElementById("resultado").innerHTML = `La dosis total es de <span class='numero-rojo'>${dosisTotal.toFixed(2)}</span> mg y el volumen a administrar es de <span class='numero-rojo'>${volumen.toFixed(2)}</span> ml.`;
+            document.getElementById("btnCalcular").style.display = "none";
+            document.getElementById("btnRecalcular").style.display = "inline-block";
+        }
+
+        function resetearFormulario() {
+            document.getElementById("peso").value = "";
+            document.getElementById("concentracion").value = "";
+            document.getElementById("dosis").value = "";
+            document.getElementById("resultado").innerHTML = "";
+            document.getElementById("btnCalcular").style.display = "inline-block";
+            document.getElementById("btnRecalcular").style.display = "none";
+        }
+    </script>
+</body>
+</html>
