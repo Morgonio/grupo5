@@ -84,7 +84,7 @@
         <label for="presion">Presión arterial sistólica (mmHg):</label>
         <input type="number" id="presion" name="presion" placeholder="Ingresa tu presión arterial">
 
-        <button onclick="calcularRiesgoCardiovascular()">Calcular Riesgo</button>
+        <button id="calcularBtn" onclick="calcularRiesgoCardiovascular()">Calcular Riesgo</button>
         <p id="resultado"></p>
     </div>
 
@@ -96,6 +96,7 @@
             var colesterol = parseInt(document.getElementById("colesterol").value);
             var hdl = parseInt(document.getElementById("hdl").value);
             var presion = parseInt(document.getElementById("presion").value);
+            var boton = document.getElementById("calcularBtn");
 
             if (isNaN(edad) || isNaN(colesterol) || isNaN(hdl) || isNaN(presion)) {
                 document.getElementById("resultado").innerHTML = "Por favor, ingresa valores válidos en todos los campos.";
@@ -119,7 +120,21 @@
             }
 
             document.getElementById("resultado").innerHTML = mensaje;
+            boton.innerHTML = "Volver a Calcular";
+            boton.setAttribute("onclick", "reiniciarFormulario()");
+        }
+
+        function reiniciarFormulario() {
+            document.getElementById("edad").value = "";
+            document.getElementById("colesterol").value = "";
+            document.getElementById("hdl").value = "";
+            document.getElementById("presion").value = "";
+            document.getElementById("resultado").innerHTML = "";
+            var boton = document.getElementById("calcularBtn");
+            boton.innerHTML = "Calcular Riesgo";
+            boton.setAttribute("onclick", "calcularRiesgoCardiovascular()");
         }
     </script>
 </body>
 </html>
+
