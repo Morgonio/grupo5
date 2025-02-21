@@ -12,6 +12,7 @@
             align-items: center;
             height: 100vh;
             background-color: #aed0f9;
+            margin: 0;
         }
         .container {
             background: white;
@@ -20,9 +21,8 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             text-align: center;
             width: 400px;
-            border: 3px solid #a8e6a3; /* Borde verde bajito */
+            border: 3px solid #a8e6a3;
         }
-
         .gender-selection {
             display: flex;
             justify-content: center;
@@ -45,13 +45,25 @@
         .gender.selected img {
             border-color: green;
         }
-        input, button {
+        .input-container {
+            text-align: center;
+            width: 100%;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+        input {
             margin: 10px 0;
             padding: 10px;
-            width: 90%;
+            width: 100%;
             font-size: 16px;
+            text-align: left;
+            border: 2px solid #ccc;
+            border-radius: 5px;
         }
-        .calculate-btn {
+        .calculate-btn, .reset-btn {
             background-color: #4CAF50;
             color: white;
             border: none;
@@ -59,8 +71,11 @@
             font-weight: bold;
             border-radius: 5px;
             transition: background-color 0.3s, transform 0.2s;
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
         }
-        .calculate-btn:hover {
+        .calculate-btn:hover, .reset-btn:hover {
             background-color: #45a049;
             transform: scale(1.05);
         }
@@ -115,17 +130,10 @@
         }
         .reset-btn {
             background-color: #13ac62;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            border-radius: 7px;
-            transition: background-color 0.3s, transform 0.2s;
             display: none;
         }
         .reset-btn:hover {
             background-color: #47e589;
-            transform: scale(1.05);
         }
     </style>
 </head>
@@ -146,14 +154,15 @@
         </div>
 
         <!-- Entrada de datos -->
-        <label>Peso (Kg):</label>
-        <input type="number" id="peso" min="30" max="150" placeholder="Ingresa tu peso">
+        <div class="input-container">
+            <label>Peso (Kg):</label>
+            <input type="number" id="peso" min="30" max="150">
 
-        <label>Altura (m):</label>
-        <input type="number" id="altura" min="1.2" max="2.2" step="0.01" placeholder="Ingresa tu altura">
+            <label>Altura (m):</label>
+            <input type="number" id="altura" min="1.2" max="2.2" step="0.01">
+        </div>
 
         <button class="calculate-btn" id="calculateBtn" onclick="calcularIMC()">CALCULAR IMC</button>
-        <p class="info">Tu salud es lo más importante. Conoce tu IMC y da el primer paso hacia un estilo de vida más equilibrado. 🌱💪.</p>
 
         <!-- Barra de IMC -->
         <div class="imc-bar">
@@ -169,6 +178,8 @@
         </div>
 
         <button class="reset-btn" id="resetBtn" onclick="resetear()">Volver a Calcular</button>
+        <p id="resultado"></p>
+        <p class="info">💡 La prevención es clave. Mantén una alimentación equilibrada y haz ejercicio regularmente.</p>
     </div>
 
     <script>
