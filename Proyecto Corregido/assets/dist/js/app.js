@@ -63,5 +63,5 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Cargar el contenido inicial (Dashboard)
-  loadContent('dashboard');
+  loadContent('Bienvenida');
 });
