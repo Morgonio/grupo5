@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Calculadora de Calorías</title>
+        <style>
+            main {
+                font-family: Arial, sans-serif;
+                background-color: #e8f5e9;
+                text-align: center;
+                padding: 20px;
+            }
+            .container {
+                background: #ffffff;
+                padding: 35px;
+                border-radius: 40px;
+                box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+                display: inline-block;
+                max-width: 400px;
+                width: 90%;
+                border: 1px solid #81c784;
+            }
+            h1 {
+                color: #388e3c;
+                font-size: 22px;
+            }
+            .icon {
+                font-size: 40px;
+                color: #388e3c;
+            }
+            input, select, button {
+                width: 100%;
+                padding: 10px;
+                margin: 10px 0;
+                border-radius: 5px;
+                border: 1px solid #81c784;
+                font-size: 16px;
+            }
+            button {
+                background-color: #66bb6a;
+                color: white;
+                border: none;
+                cursor: pointer;
+                font-size: 18px;
+            }
+            button:hover {
+                background-color: #388e3c;
+            }
+            #resultado {
+                margin-top: 15px;
+                font-size: 18px;
+                font-weight: bold;
+                color: #388e3c;
+            }
+            .alerta {
+                color: #d32f2f;
+            }
+            .oculto {
+                display: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="icon">🍏</div>
+            <h1>Calculadora de Calorías</h1>
+    
+            <label for="edad">Edad:</label>
+            <input type="number" id="edad" name="edad"><br>
+    
+            <label for="sexo">Sexo:</label>
+            <select id="sexo" name="sexo">
+                <option value="masculino">Masculino</option>
+                <option value="femenino">Femenino</option>
+            </select><br>
+    
+            <label for="altura">Altura (cm):</label>
+            <input type="number" id="altura" name="altura"><br>
+    
+            <label for="peso">Peso (kg):</label>
+            <input type="number" id="peso" name="peso"><br>
+    
+            <label for="actividad">Nivel de actividad:</label>
+            <select id="actividad" name="actividad">
+                <option value="sedentario">Sedentario</option>
+                <option value="ligero">Ligero</option>
+                <option value="moderado">Moderado</option>
+                <option value="intenso">Intenso</option>
+                <option value="muy_intenso">Muy intenso</option>
+            </select><br>
+    
+            <button id="btnCalcular" onclick="calcularCalorias()">Calcular Calorías</button>
+            <button id="btnRecalcular" class="oculto" onclick="reiniciarFormulario()">Volver a Calcular</button>
+    
+            <p id="resultado"></p>
+            <p class="info">💡 Recuerda que una alimentación balanceada y ejercicio regular son clave para una vida saludable.</p>
+        </div>
+    
+    </body>
+    </html>
+    
