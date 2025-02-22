@@ -1,4 +1,87 @@
-<div class="mt-4 ms-3">
-    <!-- Inicio del  -->
-    <h2>Dias Fertiles</h2>
-</div>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Días Fértiles</title>
+    <style>
+        main {
+            font-family: Arial, sans-serif;
+            background-color: #fde4ec; /* Fondo rosado suave */
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+            display: inline-block;
+            max-width: 400px;
+            width: 100%;
+        }
+        h1 {
+            color: #d63384;
+            font-size: 22px;
+        }
+        .image-container {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .image-container img {
+            width: 100px;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 7px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+        button {
+            background-color: #d63384;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        button:hover {
+            background-color: #b82c72;
+        }
+        #resultado {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #b82c72;
+        }
+        .info {
+            font-size: 14px;
+            color: #666;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="image-container">
+            <img src="https://static.vecteezy.com/system/resources/previews/002/204/031/non_2x/ovulation-concept-illustration-female-fertility-getting-pregnant-vector.jpg" alt="Calendario fértil">
+        </div>
+
+        <h1>Calculadora de Días Fértiles</h1>
+
+        <label for="fum">📅 Fecha de Última Menstruación (FUM):</label>
+        <input type="date" id="fum" name="fum"><br>
+        
+        <label for="ciclo">🔄 Duración del ciclo menstrual (días):</label>
+        <input type="number" id="ciclo" name="ciclo"><br>
+        
+        <button id="calcularBtn" onclick="calcularDiasFertiles()">🩺 Calcular Días Fértiles</button>
+        <button id="volverBtn" style="display:none;" onclick="volverACalcular()">🔄 Volver a Calcular</button>
+        
+        <p id="resultado"></p>
+
+        <p class="info">💡 Recuerda que esta es solo una estimación y no un método anticonceptivo.</p>
+    </div>
+</body>
+</html>
