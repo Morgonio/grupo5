@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Riesgo Cardiovascular</title>
+    <style>
+        main {
+            font-family: Arial, sans-serif;
+            background-color: #e1f5fe; /* Fondo azul claro */
+            text-align: center;
+            padding: 30px;
+        }
+        .container {
+            background: white;
+            padding: 45px;
+            border-radius: 7px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            display: inline-block;
+            max-width: 400px;
+            width: 90%;
+            border: 2px solid #d6f0fc; /* Borde con el mismo color que el fondo */
+        }
+        h1 {
+            color: #0288d1; /* Azul fuerte para el título */
+            font-size: 24px;
+        }
+        .icon {
+            font-size: 40px;
+            color: #0288d1; /* Color de icono azul */
+        }
+        label {
+            font-size: 16px;
+            margin-top: 10px;
+            color: #000000; /* Títulos en color negro */
+        }
+        input, select, button {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #81d4fa; /* Bordes azul claro */
+            font-size: 16px;
+        }
+        button {
+            background-color: #039be5; /* Botón azul fuerte */
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        button:hover {
+            background-color: #0288d1; /* Botón cambia a azul más oscuro */
+        }
+        #resultado {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #039be5; /* Texto del resultado en azul */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="icon">❤️</div> <!-- Icono de corazón -->
+        <h1>Calculadora de Riesgo Cardiovascular</h1>
+
+        <label for="edad">Edad:</label>
+        <input type="number" id="edad" name="edad"><br><br>
+
+        <label for="sexo">Sexo:</label>
+        <select id="sexo" name="sexo">
+          <option value="masculino">Masculino</option>
+          <option value="femenino">Femenino</option>
+        </select><br><br>
+
+        <label for="fumador">¿Fuma?:</label>
+        <select id="fumador" name="fumador">
+          <option value="si">Sí</option>
+          <option value="no">No</option>
+        </select><br><br>
+
+        <label for="colesterol">Colesterol total (mg/dl):</label>
+        <input type="number" id="colesterol" name="colesterol"><br><br>
+
+        <label for="hdl">Colesterol HDL (mg/dl):</label>
+        <input type="number" id="hdl" name="hdl"><br><br>
+
+        <label for="presion">Presión arterial sistólica (mmHg):</label>
+        <input type="number" id="presion" name="presion"><br><br>
+
+        <button onclick="calcularRiesgoCardiovascular()">Calcular Riesgo</button>
+
+        <p id="resultado"></p>
+        <p class="info">Tu corazón es el motor de tu vida. Cuídalo hoy para un mañana más saludable. ❤️💙.</p>
+    </div>
+</body>
+</html>
