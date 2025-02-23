@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Porcentaje de Grasa Corporal</title>
+    <style>
+        main {
+            font-family: Arial, sans-serif;
+            background-color: #bfe2fa;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+            display: inline-block;
+            max-width: 400px;
+            width: 100%;
+            border: 5px solid #bfe2fa;
+        }
+
+        h1 {
+            color: #007bb5;
+            font-size: 22px;
+        }
+        .image-container {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .image-container img {
+            width: 100px;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+        button {
+            background-color: #007bb5;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        button:hover {
+            background-color: #005f8b;
+        }
+        #mensaje {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        #mensaje strong {
+            color: red;
+        }
+        .info {
+            font-size: 14px;
+            color: #666;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="image-container">
+            <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Ícono de persona">
+        </div>
+
+        <h1>Calculadora de Porcentaje de Grasa Corporal</h1>
+
+        <label for="edad">📅 Edad:</label>
+        <input type="number" id="edad" name="edad"><br>
+        
+        <label for="sexo">🧑‍⚕️ Sexo:</label>
+        <select id="sexo" name="sexo">
+            <option value="masculino">Masculino</option>
+            <option value="femenino">Femenino</option>
+        </select><br>
+        
+        <label for="altura">📏 Altura (cm):</label>
+        <input type="number" id="altura" name="altura"><br>
+        
+        <label for="cintura">📏 Circunferencia de la cintura (cm):</label>
+        <input type="number" id="cintura" name="cintura"><br>
+        
+        <label for="cuello">📏 Circunferencia del cuello (cm):</label>
+        <input type="number" id="cuello" name="cuello"><br>
+        
+        <label for="cadera">📏 Circunferencia de la cadera (cm):</label>
+        <input type="number" id="cadera" name="cadera"><br>
+        
+        <button id="calcularButton" onclick="CalcularGrasaCorporal()">🩺 Calcular Grasa Corporal</button>
+        <button id="volverButton" onclick="ReiniciarFormularioGrasaCorporal()" style="display: none;">🔄 Volver a Calcular</button>
+        
+        <!-- Contenedor único para el mensaje -->
+        <p id="mensaje"></p>
+
+        <p class="info">💡 Recuerda que este cálculo es una estimación y no sustituye la opinión de un profesional.</p>
+    </div>
+</body>
+</html>

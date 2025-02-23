@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Riesgo de Diabetes</title>
+    <style>
+        main {
+            font-family: Arial, sans-serif;
+            background-color: #c9e5f9;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 35px;
+            border-radius: 40px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            display: inline-block;
+            max-width: 400px;
+            width: 100%;
+        }
+        h1 {
+            color: #1565c0;
+            font-size: 22px;
+        }
+        .icon {
+            font-size: 40px;
+            color: #1565c0;
+        }
+        input, select, button {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+        button {
+            background-color: #0288d1;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        button:hover {
+            background-color: #0277bd;
+        }
+        #resultado {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #0288d1; /* Mismo color del botón */
+        }
+        .numero-rojo {
+            color: #c62828; /* Rojo para el número */
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">⚕️</div>
+        <h1>Calculadora de Riesgo de Diabetes</h1>
+
+        <label for="edad">Edad:</label>
+        <input type="number" id="edad" name="edad"><br>
+        
+        <label for="peso">Peso (kg):</label>
+        <input type="number" id="peso" name="peso"><br>
+        
+        <label for="altura">Altura (m):</label>
+        <input type="number" id="altura" name="altura" step="0.01"><br>
+        
+        <label for="antecedentes">Antecedentes familiares de diabetes:</label>
+        <select id="antecedentes" name="antecedentes">
+            <option value="si">Sí</option>
+            <option value="no">No</option>
+        </select><br>
+        
+        <button id="calcularBtn" onclick="CalcularDiabetes()">Calcular Riesgo</button>
+        <button id="reiniciarBtn" onclick="ReiniciarFormularioDiabetes()" style="display: none;">Volver a Calcular</button>
+
+        <p id="resultado"></p>
+        <p class="info">💡 La prevención es clave. Mantén una alimentación equilibrada y haz ejercicio regularmente.</p>
+    </div>
+
+</body>
+</html>

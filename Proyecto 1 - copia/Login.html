@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Registration</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="assets/dist/css/login.css">
+
+</head>
+<body>
+    <div class="container">
+        <!-- Formulario de Login -->
+        <div class="form-box login">
+            <form id="loginForm">
+                <h1>Login</h1>
+                <div class="input-box">
+                    <input type="text" id="loginUsername" placeholder="Username" required>
+                    <i class='bx bxs-user'></i>
+                </div>
+                <div class="input-box">
+                    <input type="password" id="loginPassword" placeholder="Password" required>
+                    <i class="bx bxs-lock-alt"></i>
+                </div>
+                <div class="forgot-link">
+                    <a href="#">Forgot password?</a>
+                </div>
+                <button type="submit" class="btn">Login</button>
+                <p>Or login with social platforms</p>
+                <div class="social-icons">
+                    <a href="#" class="bx bxl-google"></a>
+                    <a href="#" class="bx bxl-facebook"></a>
+                    <a href="#" class="bx bxl-github"></a>
+                    <a href="#" class="bx bxl-linkedin"></a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Formulario de Registro -->
+        <div class="form-box register">
+            <form id="registerForm">
+                <h1>Registration</h1>
+                <div class="input-box">
+                    <input type="text" id="registerUsername" placeholder="Username" required>
+                    <i class='bx bxs-user' aria-label="Icono de usuario"></i>
+                </div>
+                <div class="input-box">
+                    <input type="email" id="registerEmail" placeholder="Email"  title="Por favor, ingresa un correo electrónico válido">
+                    <i class='bx bxs-envelope'></i>
+                </div>
+                <div class="input-box">
+                    <input type="password" id="registerPassword" placeholder="Password" required>
+                    <i class="bx bxs-lock-alt"></i>
+                </div>
+                <button type="submit" class="btn">Register</button>
+                <p>Or login with social platforms</p>
+                <div class="social-icons">
+                    <a href="#" class="bx bxl-google"></a>
+                    <a href="#" class="bx bxl-facebook"></a>
+                    <a href="#" class="bx bxl-github"></a>
+                    <a href="#" class="bx bxl-linkedin"></a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Botones para alternar entre Login y Registro -->
+        <div class="toggle-box">
+            <div class="toggle-panel toggle-left">
+                <h1>Hello, Welcome!</h1>
+                <p>Don't have an account?</p>
+                <button class="btn register-btn" id="showRegister">Register</button>
+            </div>
+            <div class="toggle-panel toggle-right">
+                <h1>Welcome Back!</h1>
+                <p>Already have an account?</p>
+                <button class="btn login-btn" id="showLogin">Login</button>
+            </div>
+        </div>
+    </div>
+    <script src="assets/dist/js/login.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const loginForm = document.getElementById("loginForm");
+            const registerForm = document.getElementById("registerForm");
+
+            // Alternar entre los formularios de Login y Registro
+            const showRegisterButton = document.getElementById("showRegister");
+            const showLoginButton = document.getElementById("showLogin");
+            const loginBox = document.querySelector(".form-box.login");
+            const registerBox = document.querySelector(".form-box.register");
+
+            showRegisterButton.addEventListener("click", () => {
+                loginBox.style.display = "none";
+                registerBox.style.display = "block";
+            });
+
+            showLoginButton.addEventListener("click", () => {
+                registerBox.style.display = "none";
+                loginBox.style.display = "block";
+            });
+
+            // Manejar el registro
+            registerForm.addEventListener("submit", async (e) => {
+                e.preventDefault();
+            
+                const username = document.getElementById("registerUsername").value.trim();
+                const email = document.getElementById("registerEmail").value.trim();
+                const password = document.getElementById("registerPassword").value.trim();
+            
+                // Validar el formato del correo electrónico usando una expresión regular
+                const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                if (!emailRegex.test(email)) {
+                    alert("Por favor, ingresa un correo electrónico válido.");
+                    return;
+                }
+            
+                if (!username || !email || !password) {
+                    alert("Por favor, completa todos los campos.");
+                    return;
+                }
+            
+                try {
+                    const response = await fetch("api/register.php", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ username, email, password }),
+                    });
+            
+                    const result = await response.json();
+                    alert(result.message);
+            
+                    if (result.status === "success") {
+                        registerForm.reset(); // Limpiar el formulario
+                    }
+                } catch (error) {
+                    alert("Ocurrió un error inesperado. Por favor, intenta nuevamente.");
+                }
+            });
+            // Manejar el inicio de sesión
+            loginForm.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const username = document.getElementById("loginUsername").value.trim();
+                const password = document.getElementById("loginPassword").value.trim();
+
+                if (!username || !password) {
+                    alert("Por favor, completa todos los campos.");
+                    return;
+                }
+
+                try {
+                    const response = await fetch("api/login.php", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ username, password }),
+                    });
+
+                    const result = await response.json();
+                    alert(result.message);
+
+                    if (result.status === "success") {
+                        window.location.href = "dashboard/index.html"; // Redirigir al dashboard
+                    }
+                } catch (error) {
+                    alert("Ocurrió un error inesperado. Por favor, intenta nuevamente.");
+                }
+            });
+        });
+    </script>
+</body>
+</html>
