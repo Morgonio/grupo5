@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Peso Fetal - PA y LF</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fde8f2;
+            text-align: center;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .content {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            max-width: 800px;
+            width: 100%;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            width: 400px;
+            border: 2px solid #f48fb1;
+        }
+        h1 {
+            color: #d81b60;
+            font-size: 20px;
+        }
+        img {
+            width: 100px;
+            margin-bottom: 10px;
+        }
+        label {
+            font-size: 16px;
+            color: #d81b60;
+            display: block;
+            text-align: left;
+            margin-top: 8px;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            border: 1px solid #f8bbd0;
+            font-size: 16px;
+        }
+        button {
+            background-color: #ec407a;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #d81b60;
+        }
+        #resultado {
+            margin-top: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #ec407a;
+        }
+        .info-peso {
+            background-color: #ffe0eb;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: left;
+            font-size: 14px;
+            border: 2px solid #ec407a;
+            width: 300px;
+            height: fit-content;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Calculadora de Peso Fetal</h1>
+    
+    <div class="content">
+        <!-- Sección del cálculo -->
+        <div class="container">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTfk6CaQVfv7BBhbTiIlTNBX7lXb-RdDtnNw&s" alt="Ilustración de perímetro abdominal y longitud del fémur">
+
+            <label for="pa">Perímetro Abdominal (mm):</label>
+            <input type="number" id="pa">
+
+            <label for="lf">Longitud del Fémur (mm):</label>
+            <input type="number" id="lf">
+
+            <button onclick="calcularPesoFetal()" id="btnCalcular">Calcular Peso Fetal</button>
+            <button onclick="guardarResultado()" id="btnGuardar" style="display: none;">Guardar Resultado</button>
+
+            <p id="resultado"></p>
+        </div>
+
+        <!-- Sección de información sobre el peso fetal -->
+        <div class="info-peso">
+            <h3>Información sobre el Peso Fetal</h3>
+            <p><strong>Menos de 2500g:</strong> Bajo peso (posible riesgo).</p>
+            <p><strong>Entre 2500g y 4000g:</strong> Rango normal.</p>
+            <p><strong>Más de 4000g:</strong> Peso alto (requiere observación médica).</p>
+        </div>
+    </div>
+
+    <script>
+        function calcularPesoFetal() {
+            let pa = parseFloat(document.getElementById("pa").value);
+            let lf = parseFloat(document.getElementById("lf").value);
+
+            if (isNaN(pa) || isNaN(lf)) {
+                alert("Por favor, ingrese todos los valores.");
+                return;
+            }
+
+            let pesoFetal = (0.6 * pa) + (0.4 * lf);
+            document.getElementById("resultado").innerText = "Peso Fetal Estimado: " + pesoFetal.toFixed(2) + " gramos";
+            
+            document.getElementById("btnCalcular").innerText = "Volver a Calcular";
+            document.getElementById("btnGuardar").style.display = "block";
+        }
+
+        function guardarResultado() {
+            let resultado = document.getElementById("resultado").innerText;
+            if (resultado) {
+                localStorage.setItem("pesoFetal", resultado);
+                alert("Resultado guardado correctamente.");
+            } else {
+                alert("No hay resultado para guardar.");
+            }
+        }
+    </script>
+
+</body>
+</html>
