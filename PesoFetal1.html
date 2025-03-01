@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Peso Fetal</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fce4ec;
+            text-align: center;
+            padding: 50px;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 7px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            display: inline-block;
+            max-width: 400px;
+            width: 70%;
+            border: 2px solid #fce4ec;
+        }
+        .image-container img {
+            width: 100px;
+            margin-bottom: 10px;
+        }
+        h1 {
+            color: #d81b60;
+        }
+        input, button {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #f8bbd0;
+        }
+        button {
+            background-color: #ec407a;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #d81b60;
+        }
+        #resultado {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #ec407a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="image-container">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTfk6CaQVfv7BBhbTiIlTNBX7lXb-RdDtnNw&s" alt="Ilustración de medidas fetales">
+        </div>
+        <h1>Calculadora de Peso Fetal</h1>
+        <label for="dbp">Diámetro Biparietal (mm):</label>
+        <input type="number" id="dbp">
+        <label for="hc">Perímetro Cefálico (mm):</label>
+        <input type="number" id="hc">
+        <label for="ac">Perímetro Abdominal (mm):</label>
+        <input type="number" id="ac">
+        <label for="fl">Longitud del Fémur (mm):</label>
+        <input type="number" id="fl">
+        <button onclick="calcularPesoFetal()">Calcular</button>
+        <button onclick="guardarResultado()">Guardar</button>
+        <p id="resultado"></p>
+    </div>
+    <script>
+        function calcularPesoFetal() {
+            let dbp = parseFloat(document.getElementById("dbp").value);
+            let hc = parseFloat(document.getElementById("hc").value);
+            let ac = parseFloat(document.getElementById("ac").value);
+            let fl = parseFloat(document.getElementById("fl").value);
+            
+            if (isNaN(dbp) || isNaN(hc) || isNaN(ac) || isNaN(fl)) {
+                alert("Por favor, completa todos los campos");
+                return;
+            }
+            
+            let logPeso = 1.3596 + 0.0064 * hc + 0.0424 * ac + 0.174 * fl + 0.006 * dbp;
+            let peso = Math.pow(10, logPeso);
+            
+            document.getElementById("resultado").innerHTML = "Peso Fetal Estimado: " + peso.toFixed(0) + " gramos";
+        }
+        
+        function guardarResultado() {
+            let resultado = document.getElementById("resultado").innerText;
+            localStorage.setItem("pesoFetal", resultado);
+            alert("Resultado guardado");
+        }
+    </script>
+</body>
+</html>
