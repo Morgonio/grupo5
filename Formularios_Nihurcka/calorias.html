@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Calorías</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e8f5e9;
+            text-align: center;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .container, .history-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 300px;
+        }
+        h1, h3 {
+            color: #388e3c;
+            font-size: 20px;
+        }
+        label, input, select {
+            margin-bottom: 12px;
+        }
+        input, select, button {
+            width: 90%;
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 5px;
+            border: 1px solid #81c784;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #66bb6a;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            margin: 10px 0;
+        }
+        button:hover {
+            background-color: #388e3c;
+        }
+        #resultado {
+            margin-top: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #388e3c;
+        }
+        .history-list {
+            font-size: 14px;
+            color: #333;
+            text-align: left;
+            max-height: 550px;
+            overflow-y: auto;
+        }
+        .history-item {
+            background: #dcedc8;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            border-bottom: 1px solid #ccc;
+        }
+        .mensaje-error {
+            color: #d32f2f;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        .history-container {
+            position: relative;
+        }
+        .close-btn {
+            font-size: 24px;
+            color: #d32f2f;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .close-btn:hover {
+            color: #b71c1c;
+        }
+        .info {
+            font-size: 17px;
+            margin-top: 5px;
+        }
+        @media (min-width: 768px) {
+            body {
+                flex-direction: row;
+            }
+            .container, .history-container {
+                max-width: 350px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🍏 Calculadora de Calorías</h1>
+        <label for="edad">Edad:</label>
+        <input type="number" id="edad" name="edad">
+
+        <label for="sexo">Sexo:</label>
+        <select id="sexo" name="sexo">
+            <option value="masculino">Masculino</option>
+            <option value="femenino">Femenino</option>
+        </select>
+
+        <label for="altura">Altura (m):</label>
+        <input type="number" step="0.01" id="altura" name="altura">
+
+        <label for="peso">Peso (kg):</label>
+        <input type="number" id="peso" name="peso">
+
+        <label for="actividad">Nivel de actividad:</label>
+        <select id="actividad" name="actividad">
+            <option value="sedentario">Sedentario</option>
+            <option value="ligero">Ligero</option>
+            <option value="moderado">Moderado</option>
+            <option value="intenso">Intenso</option>
+            <option value="muy_intenso">Muy intenso</option>
+        </select>
+        <button onclick="calcularCalorias()">Calcular Calorías</button>
+        <button onclick="verHistorial()">Ver Historial</button>
+
+        <p id="error" class="mensaje-error" style="display:none;">Por favor, completa todos los campos.</p>
+
+        <p id="resultado"></p>
+        <p class="info" id="mensajeInfo">💡 Recuerda una dieta balanceada y ejercicio son clave para tu salud. ¡Empieza hoy!</p>
+    </div>
+
+    <div class="history-container" id="historialContainer" style="display: none;">
+        <h3>📜 Historial de Cálculos
+            <span class="close-btn" onclick="cerrarHistorial()">×</span>
+        </h3>
+        <div class="history-list" id="historial"></div>
+    </div>
+
+    <script>
+        let historialCalorias = [];
+        let contadorHistorial = 1;
+
+        function calcularCalorias() {
+            var edad = document.getElementById("edad").value;
+            var sexo = document.getElementById("sexo").value;
+            var altura = document.getElementById("altura").value;
+            var peso = document.getElementById("peso").value;
+            var actividad = document.getElementById("actividad").value;
+
+            if (!edad || !sexo || !altura || !peso || !actividad) {
+                document.getElementById("error").style.display = "block";
+                return;
+            }
+
+            document.getElementById("error").style.display = "none";
+
+            var metabolismoBasal = sexo === "masculino" ? 
+                (10 * peso) + (6.25 * (altura * 100)) - (5 * edad) + 5 : 
+                (10 * peso) + (6.25 * (altura * 100)) - (5 * edad) - 161;
+
+            var factores = {
+                "sedentario": 1.2,
+                "ligero": 1.375,
+                "moderado": 1.55,
+                "intenso": 1.725,
+                "muy_intenso": 1.9
+            };
+            var calorias = metabolismoBasal * factores[actividad];
+
+            document.getElementById("resultado").innerHTML = 
+                `Necesitas consumir Aproximadamente <span style="color: red;"><b>${calorias.toFixed(1)}</b></span> kcal/día.`;
+
+            historialCalorias.push({
+                id: contadorHistorial,
+                edad: edad,
+                sexo: sexo,
+                altura: altura,
+                peso: peso,
+                actividad: actividad,
+                calorias: calorias.toFixed(1)
+            });
+            contadorHistorial++;
+
+            actualizarHistorial();
+        }
+
+        function verHistorial() {
+            var historialContainer = document.getElementById("historialContainer");
+            historialContainer.style.display = "block";
+        }
+
+        function cerrarHistorial() {
+            document.getElementById("historialContainer").style.display = "none";
+        }
+
+        function actualizarHistorial() {
+            var historialDiv = document.getElementById("historial");
+            historialDiv.innerHTML = "";
+
+            historialCalorias.forEach((item) => {
+                var nuevoRegistro = document.createElement("div");
+                nuevoRegistro.classList.add("history-item");
+                nuevoRegistro.innerHTML =  
+                    `<p>📌 <b>Registro ${item.id}:</b></p>
+                    <p>📅 <b>Edad:</b> ${item.edad} años</p>
+                    <p>⚤ <b>Sexo:</b> ${item.sexo}</p>
+                    <p>📏 <b>Altura:</b> ${item.altura} m</p>
+                    <p>⚖️ <b>Peso:</b> ${item.peso} kg</p>
+                    <p>🏃 <b>Nivel de actividad:</b> ${item.actividad}</p>
+                    <p>🔥 <b>Calorías:</b> ${item.calorias} kcal/día</p>`;
+                historialDiv.appendChild(nuevoRegistro);
+            });
+        }
+    </script>
+</body>
+</html>
