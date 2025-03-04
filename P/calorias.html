@@ -213,14 +213,14 @@
                     var nuevoRegistro = document.createElement("div");
                     nuevoRegistro.classList.add("history-item");
                     nuevoRegistro.innerHTML =
-                        `<p> <b>Registro ${item.id}:</b></p>
-                        <p> <b>Edad:</b> ${item.edad} años</p>
+                        `<p>📌 <b>Registro ${item.id}:</b></p>
+                        <p>📅 <b>Edad:</b> ${item.edad} años</p>
                         <p>⚤ <b>Sexo:</b> ${item.sexo}</p>
-                        <p> <b>Altura:</b> ${item.altura} m</p>
+                        <p>📏 <b>Altura:</b> ${item.altura} m</p>
                         <p>⚖️ <b>Peso:</b> ${item.peso} kg</p>
-                        <p> <b>Nivel de actividad:</b> ${item.actividad}</p>
-                        <p> <b>Calorías:</b> ${item.calorias} kcal/día</p>
-                        <p> <b>Fecha:</b> ${item.fecha_hora}</p>`;
+                        <p>🏃 <b>Nivel de actividad:</b> ${item.actividad}</p>
+                        <p>🔥 <b>Calorías:</b> ${item.calorias} kcal/día</p>
+                        <p>📅 <b>Fecha:</b> ${item.fecha_hora}</p>`;
                     historialDiv.appendChild(nuevoRegistro);
                 });
                 historialContainer.style.display = "block";
