@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Días Fértiles</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fde4ec;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+        }
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        .container, .history-container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 400px;
+            position: relative;
+        }
+        h1 {
+            color: #d63384;
+            font-size: 22px;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+        button {
+            background-color: #d63384;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        button:hover {
+            background-color: #b82c72;
+        }
+        .history-container {
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+        }
+        .history-item {
+            text-align: left;
+            border-bottom: 1px solid #ccc;
+            padding: 10px;
+            background: #fff5f8;
+            border-radius: 5px;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: red;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+        @media (min-width: 768px) {
+            .main-container {
+                flex-direction: row;
+                justify-content: center;
+            }
+            .container, .history-container {
+                width: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="container">
+            <h1>Calculadora de Días Fértiles</h1>
+            <label for="fum">📅 Fecha de Última Menstruación (FUM):</label>
+            <input type="date" id="fum"><br>
+            
+            <label for="ciclo">🔄 Duración del ciclo menstrual (días):</label>
+            <input type="number" id="ciclo"><br>
+            
+            <button id="calcularBtn" onclick="calcularDiasFertiles()">🩺 Calcular Días Fértiles</button>
+            <button id="verHistorialBtn" onclick="mostrarHistorial()">📜 Ver Historial</button>
+            <button id="volverBtn" style="display:none;" onclick="volverACalcular()">🔄 Volver a Calcular</button>
+            
+            <p id="resultado"></p>
+        </div>
+        
+        <div class="history-container" id="historialContainer">
+            <button class="close-btn" onclick="cerrarHistorial()">✖</button>
+            <h3>📜 Historial de Cálculos</h3>
+            <div id="historial"></div>
+        </div>
+    </div>
+    
+    <script>
+    function calcularDiasFertiles() {
+        var fum = document.getElementById("fum").value;
+        var ciclo = parseInt(document.getElementById("ciclo").value);
+
+        if (fum === "" || isNaN(ciclo) || ciclo <= 0) {
+            alert("⚠️ Ingresa datos válidos.");
+            return;
+        }
+
+        var fechaFUM = new Date(fum);
+        var diaOvulacion = new Date(fechaFUM.getTime() + (ciclo - 14) * 24 * 60 * 60 * 1000);
+        var diasFertilesInicio = new Date(diaOvulacion.getTime() - 2 * 24 * 60 * 60 * 1000);
+        var diasFertilesFin = new Date(diaOvulacion.getTime() + 2 * 24 * 60 * 60 * 1000);
+
+        document.getElementById("resultado").innerHTML = `📆 Tus días fértiles son del <strong>${diasFertilesInicio.toLocaleDateString()}</strong> al <strong>${diasFertilesFin.toLocaleDateString()}</strong>.`;
+
+        // Enviar datos al servidor
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "php/diasfertiles_guardar_mostrar.php", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onload = function() {
+            if (xhr.status >= 200 && xhr.status < 400) {
+                console.log(xhr.responseText);
+            } else {
+                console.error("Error al guardar datos.");
+            }
+        };
+        xhr.onerror = function() {
+            console.error("Error de red al guardar datos.");
+        };
+        var params = "fum=" + fum + "&ciclo=" + ciclo + "&inicioFertiles=" + diasFertilesInicio.toISOString().split('T')[0] + "&finFertiles=" + diasFertilesFin.toISOString().split('T')[0];
+        xhr.send(params);
+
+        mostrarHistorial();
+    }
+
+    function volverACalcular() {
+        document.getElementById("fum").value = "";
+        document.getElementById("ciclo").value = "";
+        document.getElementById("resultado").innerHTML = "";
+    }
+
+    function mostrarHistorial() {
+        var historialDiv = document.getElementById("historial");
+        historialDiv.innerHTML = "";
+        document.getElementById("historialContainer").style.display = "block";
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "php/diasfertiles_guardar_mostrar.php", true);
+        xhr.onload = function() {
+            if (xhr.status >= 200 && xhr.status < 400) {
+                var historialDatos = JSON.parse(xhr.responseText);
+                historialDatos.forEach((item, index) => {
+                    var nuevoRegistro = document.createElement("div");
+                    nuevoRegistro.classList.add("history-item");
+                    nuevoRegistro.innerHTML = `<p><b>Registro ${index + 1}</b></p>
+                                                <p>📅 FUM: ${item.fum}</p>
+                                                <p>🔄 Ciclo: ${item.ciclo} días</p>
+                                                <p>📆 Días fértiles: ${new Date(item.inicioFertiles).toLocaleDateString()} - ${new Date(item.finFertiles).toLocaleDateString()}</p>
+                                                <p>📅 Fecha de Calculo: ${new Date(item.fechaCalculo).toLocaleDateString()}</p>`;
+                    historialDiv.appendChild(nuevoRegistro);
+                });
+            } else {
+                console.error("Error al obtener el historial.");
+            }
+        };
+        xhr.onerror = function() {
+            console.error("Error de red al obtener el historial.");
+        };
+        xhr.send();
+    }
+
+    function cerrarHistorial() {
+        document.getElementById("historialContainer").style.display = "none";
+    }
+</script>
+</body>
+</html>
