@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Dosis de Medicamentos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e1f5fe;
+            text-align: center;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .container, .history-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 300px;
+            border: 5px solid #e1f5fe;
+            position: relative;
+        }
+        h1, h3 {
+            color: #0288d1;
+            font-size: 20px;
+            line-height: 1.5;
+        }
+        input, button {
+            width: 90%;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 5px;
+            border: 1px solid #81d4fa;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #039be5;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        button:hover {
+            background-color: #0288d1;
+        }
+        #resultado {
+            margin-top: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #039be5;
+        }
+        .numero-rojo {
+            color: #f44336;
+        }
+        .mensaje-error {
+            color: #f44336;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        .history-list {
+            font-size: 14px;
+            color: #333;
+            text-align: left;
+            max-height: 507px;
+            overflow-y: auto;
+        }
+        .history-item {
+            background: #d1e7fe;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            border-bottom: 1px solid #ccc;
+        }
+        .close-btn {
+            font-size: 24px;
+            color: #f44336;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .close-btn:hover {
+            color: #b71c1c;
+        }
+        @media (min-width: 768px) {
+            body {
+                flex-direction: row;
+            }
+            .container, .history-container {
+                max-width: 350px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💊 Calculadora de Dosis de Medicamentos</h1>
+
+        <label for="peso">Peso del paciente (kg):</label>
+        <input type="number" id="peso" name="peso">
+
+        <label for="concentracion">Concentración del medicamento (mg/ml):</label>
+        <input type="number" id="concentracion" name="concentracion">
+
+        <label for="dosis">Dosis recomendada (mg/kg):</label>
+        <input type="number" id="dosis" name="dosis">
+
+        <button onclick="calcularDosisMedicamento()">Calcular Dosis</button>
+        <button onclick="verHistorial()">Ver Historial</button>
+
+        <p id="resultado"></p>
+
+        <p id="mensajeError" class="mensaje-error"></p>
+
+        <p class="info">⚠️ Recuerda siempre consultar con un profesional de la salud antes de administar cualquier medicamneto.</p>
+    </div>
+
+    <div class="history-container" id="historialContainer" style="display: none;">
+        <h3>📜 Historial de Cálculos
+            <span class="close-btn" onclick="cerrarHistorial()">×</span>
+        </h3>
+        <div class="history-list" id="historial"></div>
+    </div>
+
+    <script>
+    function calcularDosisMedicamento() {
+        var peso = document.getElementById("peso").value;
+        var concentracion = document.getElementById("concentracion").value;
+        var dosisRecomendada = document.getElementById("dosis").value;
+        var mensajeError = document.getElementById("mensajeError");
+        var resultado = document.getElementById("resultado");
+
+        mensajeError.innerHTML = "";
+        resultado.innerHTML = "";
+
+        if (peso === "" || concentracion === "" || dosisRecomendada === "") {
+            mensajeError.innerHTML = "Por favor, ingresa todos los valores.";
+            return;
+        }
+
+        peso = parseFloat(peso);
+        concentracion = parseFloat(concentracion);
+        dosisRecomendada = parseFloat(dosisRecomendada);
+
+        var dosisTotal = peso * dosisRecomendada;
+        var volumen = dosisTotal / concentracion;
+
+        var resultadoTexto = "La dosis total del medicamento es de <span class='numero-rojo'>" + dosisTotal.toFixed(2) + "</span> <span class='numero-rojo'>mg</span> y el volumen a administrar es de <span class='numero-rojo'>" + volumen.toFixed(2) + "</span> <span class='numero-rojo'>ml</span>.";
+
+        resultado.innerHTML = resultadoTexto;
+
+        // Enviar datos al servidor
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "php/guardar_mostrar_dosismedicamentos.php", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onload = function() {
+            if (xhr.status >= 200 && xhr.status < 400) {
+                console.log(xhr.responseText); // Opcional: muestra la respuesta del servidor
+            } else {
+                console.error("Error al guardar datos.");
+            }
+        };
+        xhr.onerror = function() {
+            console.error("Error de red al guardar datos.");
+        };
+        var params = "peso=" + peso + "&concentracion=" + concentracion + "&dosisRecomendada=" + dosisRecomendada + "&dosisTotal=" + dosisTotal.toFixed(2) + "&volumen=" + volumen.toFixed(2);
+        xhr.send(params);
+    }
+
+    function verHistorial() {
+        var historialContainer = document.getElementById("historialContainer");
+        var historialDiv = document.getElementById("historial");
+        historialDiv.innerHTML = ""; // Limpiar el historial anterior
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "php/guardar_mostrar_dosismedicamentos.php", true);
+        xhr.onload = function() {
+            if (xhr.status >= 200 && xhr.status < 400) {
+                var historialDatos = JSON.parse(xhr.responseText);
+                historialDatos.forEach((item) => {
+                    var nuevoRegistro = document.createElement("div");
+                    nuevoRegistro.classList.add("history-item");
+                    nuevoRegistro.innerHTML = `
+                        <p>📌 <b>Registro ${item.id}:</b></p>
+                        <p>⚖️ <b>Peso:</b> ${item.peso} kg</p>
+                        <p>💊 <b>Concentración:</b> ${item.concentracion} mg/ml</p>
+                        <p>📐 <b>Dosis recomendada:</b> ${item.dosisRecomendada} mg/kg</p>
+                        <p>🔥 <b>Dosis total:</b> ${item.dosisTotal} mg</p>
+                        <p>💧 <b>Volumen:</b> ${item.volumen} ml</p>
+                        <p>📅 <b>Fecha:</b> ${item.fecha}</p>`; // Mostrar la fecha
+                    historialDiv.appendChild(nuevoRegistro);
+                });
+                historialContainer.style.display = "block";
+            } else {
+                console.error("Error al obtener el historial.");
+            }
+        };
+        xhr.onerror = function() {
+            console.error("Error de red al obtener el historial.");
+        };
+        xhr.send();
+    }
+
+    function cerrarHistorial() {
+        document.getElementById("historialContainer").style.display = "none";
+    }
+</script>
+</body>
+</html>
