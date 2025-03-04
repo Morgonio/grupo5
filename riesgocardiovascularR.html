@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Calculadora de Riesgo Cardiovascular</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e3f2fd;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            background: #ffffff;
+            padding: 35px;
+            border-radius: 40px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            display: inline-block;
+            max-width: 400px;
+            width: 90%;
+            border: 1px solid #64b5f6;
+        }
+        h1 {
+            color: #1976d2;
+            font-size: 22px;
+        }
+        .icon {
+            font-size: 40px;
+            color: #d32f2f;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #64b5f6;
+            font-size: 16px;
+        }
+        button {
+            background-color: #42a5f5;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        button:hover {
+            background-color: #1976d2;
+        }
+        #resultado {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #1976d2;
+        }
+        .alerta {
+            color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">❤️</div>
+        <h1>Calculadora de Riesgo Cardiovascular</h1>
+        <label for="edad">Edad:</label>
+        <input type="number" id="edad" name="edad" placeholder="Ingresa tu edad">
+
+        <label for="sexo">Sexo:</label>
+        <select id="sexo" name="sexo">
+            <option value="masculino">Masculino</option>
+            <option value="femenino">Femenino</option>
+        </select>
+
+        <label for="fumador">¿Fuma?:</label>
+        <select id="fumador" name="fumador">
+            <option value="si">Sí</option>
+            <option value="no">No</option>
+        </select>
+
+        <label for="colesterol">Colesterol total (mg/dl):</label>
+        <input type="number" id="colesterol" name="colesterol" placeholder="Ingresa tu colesterol total">
+
+        <label for="hdl">Colesterol HDL (mg/dl):</label>
+        <input type="number" id="hdl" name="hdl" placeholder="Ingresa tu colesterol HDL">
+
+        <label for="presion">Presión arterial sistólica (mmHg):</label>
+        <input type="number" id="presion" name="presion" placeholder="Ingresa tu presión arterial">
+
+        <button id="calcularBtn" onclick="calcularRiesgoCardiovascular()">Calcular Riesgo</button>
+        <p id="resultado"></p>
+    </div>
+
+    <script>
+        function calcularRiesgoCardiovascular() {
+            var edad = parseInt(document.getElementById("edad").value);
+            var sexo = document.getElementById("sexo").value;
+            var fumador = document.getElementById("fumador").value;
+            var colesterol = parseInt(document.getElementById("colesterol").value);
+            var hdl = parseInt(document.getElementById("hdl").value);
+            var presion = parseInt(document.getElementById("presion").value);
+            var boton = document.getElementById("calcularBtn");
+
+            if (isNaN(edad) || isNaN(colesterol) || isNaN(hdl) || isNaN(presion)) {
+                document.getElementById("resultado").innerHTML = "Por favor, ingresa valores válidos en todos los campos.";
+                return;
+            }
+
+            var puntos = 0;
+            puntos += (sexo === "masculino" ? (edad - 20) * 0.3 : (edad - 20) * 0.2);
+            puntos += (colesterol > 200) ? ((colesterol - 200) / 10) * 1.5 : 0;
+            puntos -= (hdl > 50) ? ((hdl - 50) / 5) * 1.0 : 0;
+            puntos += (presion > 120) ? ((presion - 120) / 10) * 1.8 : 0;
+            puntos += (fumador === "si") ? 3 : 0;
+
+            var mensaje;
+            if (puntos < 5) {
+                mensaje = "Bajo riesgo cardiovascular.";
+            } else if (puntos < 10) {
+                mensaje = "Riesgo moderado.";
+            } else {
+                mensaje = "Alto riesgo cardiovascular. Consulta a un médico.";
+            }
+
+            document.getElementById("resultado").innerHTML = mensaje;
+            boton.innerHTML = "Volver a Calcular";
+            boton.setAttribute("onclick", "reiniciarFormulario()");
+        }
+
+        function reiniciarFormulario() {
+            document.getElementById("edad").value = "";
+            document.getElementById("colesterol").value = "";
+            document.getElementById("hdl").value = "";
+            document.getElementById("presion").value = "";
+            document.getElementById("resultado").innerHTML = "";
+            var boton = document.getElementById("calcularBtn");
+            boton.innerHTML = "Calcular Riesgo";
+            boton.setAttribute("onclick", "calcularRiesgoCardiovascular()");
+        }
+    </script>
+</body>
+</html>
+
