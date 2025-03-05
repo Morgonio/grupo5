@@ -21,7 +21,7 @@
             max-width: 800px;
             width: 100%;
         }
-        .container {
+        .container, .history-container {
             background: white;
             padding: 30px;
             border-radius: 10px;
@@ -29,13 +29,9 @@
             width: 400px;
             border: 2px solid #f48fb1;
         }
-        h1 {
+        h1, h3 {
             color: #d81b60;
             font-size: 20px;
-        }
-        img {
-            width: 100px;
-            margin-bottom: 10px;
         }
         label {
             font-size: 16px;
@@ -68,40 +64,23 @@
             font-weight: bold;
             color: #ec407a;
         }
-        .info-peso {
-            background-color: #ffe0eb;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: left;
-            font-size: 14px;
-            border: 2px solid #ec407a;
-            width: 300px;
-            height: fit-content;
-        }
         .history-container {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-            width: 100%;
-            max-width: 350px;
+            display: none;
             position: relative;
-            display: none; /* Inicialmente oculto */
-            margin: 20px auto;
         }
         .history-list {
             font-size: 14px;
             color: #333;
             text-align: left;
-            max-height: 507px;
+            max-height: 300px;
             overflow-y: auto;
         }
         .history-item {
-            background: #f8bbd0;
+            background: #ffe0eb;
             padding: 10px;
             margin: 5px 0;
             border-radius: 5px;
-            border-bottom: 1px solid #ccc;
+            border-bottom: 1px solid #ec407a;
         }
         .close-btn {
             font-size: 24px;
@@ -114,138 +93,83 @@
         .close-btn:hover {
             color: #b71c1c;
         }
-        @media (min-width: 768px) {
-            body {
-                display: flex;
-                justify-content: center;
-                align-items: flex-start;
-            }
-            .container, .history-container {
-                max-width: 350px;
-            }
-        }
     </style>
 </head>
 <body>
-
     <h1>Calculadora de Peso Fetal</h1>
-
     <div class="content">
         <div class="container">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTfk6CaQVfv7BBhbTiIlTNBX7lXb-RdDtnNw&s" alt="Ilustración de perímetro abdominal y longitud del fémur">
-
             <label for="pa">Perímetro Abdominal (mm):</label>
             <input type="number" id="pa">
 
             <label for="lf">Longitud del Fémur (mm):</label>
             <input type="number" id="lf">
 
-            <button onclick="calcularPesoFetal()" id="btnCalcular">Calcular Peso Fetal</button>
+            <button onclick="calcularPesoFetal()">Calcular Peso Fetal</button>
             <button onclick="verHistorial()">Ver Historial</button>
-
             <p id="resultado"></p>
         </div>
+    </div>
+    
+    <div class="history-container" id="historialContainer">
+        <h3>📜 Historial de Cálculos
+            <span class="close-btn" onclick="cerrarHistorial()">×</span>
+        </h3>
+        <div class="history-list" id="historial"></div>
+    </div>
 
-        <div class="info-peso">
-            <h3>Información sobre el Peso Fetal</h3>
-            <p><strong>Menos de 2500g:</strong> Bajo peso (posible riesgo).</p>
-<p><strong>Entre 2500g y 4000g:</strong> Rango normal.</p>
-<p><strong>Más de 4000g:</strong> Peso alto (requiere observación médica).</p>
-</div>
-</div>
+    <script>
+        let historialPesos = [];
+        let contadorHistorial = 1;
 
-<div class="history-container" id="historialContainer">
-    <h3>Historial de Cálculos
-        <span class="close-btn" onclick="cerrarHistorial()">×</span>
-    </h3>
-    <div class="history-list" id="historial"></div>
-</div>
+        function calcularPesoFetal() {
+            let pa = parseFloat(document.getElementById("pa").value);
+            let lf = parseFloat(document.getElementById("lf").value);
 
-<script>
-    function calcularPesoFetal() {
-        let pa = parseFloat(document.getElementById("pa").value);
-        let lf = parseFloat(document.getElementById("lf").value);
+            if (isNaN(pa) || isNaN(lf)) {
+                alert("Por favor, ingrese todos los valores.");
+                return;
+            }
 
-        if (isNaN(pa) || isNaN(lf)) {
-            alert("Por favor, ingrese todos los valores.");
-            return;
+            let pesoFetal = (0.6 * pa) + (0.4 * lf);
+            let resultadoTexto = "Peso Fetal Estimado: " + pesoFetal.toFixed(2) + " gramos";
+            document.getElementById("resultado").innerText = resultadoTexto;
+
+            historialPesos.push({
+                id: contadorHistorial,
+                pa: pa,
+                lf: lf,
+                pesoFetal: pesoFetal.toFixed(2)
+            });
+            contadorHistorial++;
+
+            actualizarHistorial();
         }
 
-        let pesoFetal = (0.6 * pa) + (0.4 * lf);
-        let pesoEstimado = pesoFetal.toFixed(2);
+        function verHistorial() {
+            document.getElementById("historialContainer").style.display = "block";
+        }
 
-        document.getElementById("resultado").innerText = "Peso Fetal Estimado: " + pesoEstimado + " gramos";
+        function cerrarHistorial() {
+            document.getElementById("historialContainer").style.display = "none";
+        }
 
-        // Guardar resultado automáticamente
-        guardarResultado(pa, lf, pesoEstimado);
-    }
+        function actualizarHistorial() {
+            let historialDiv = document.getElementById("historial");
+            historialDiv.innerHTML = "";
 
-    function guardarResultado(pa, lf, pesoEstimado) {
-        // Enviar datos al servidor
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "php/pesofetalpalf_guardar_mostrar.php", true);
-        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        xhr.onload = function() {
-            if (xhr.status >= 200 && xhr.status < 400) {
-                console.log(xhr.responseText);
-                actualizarHistorial(); // Actualizar historial después de guardar
-            } else {
-                console.error("Error al guardar datos.");
-                alert("Error al guardar el resultado.");
-            }
-        };
-        xhr.onerror = function() {
-            console.error("Error de red al guardar datos.");
-            alert("Error de red al guardar el resultado.");
-        };
-        var params = "pa=" + pa + "&lf=" + lf + "&pesoEstimado=" + pesoEstimado;
-        xhr.send(params);
-    }
-
-    function verHistorial() {
-        var historialContainer = document.getElementById("historialContainer");
-        historialContainer.style.display = "block";
-        actualizarHistorial();
-    }
-
-    function cerrarHistorial() {
-        document.getElementById("historialContainer").style.display = "none";
-    }
-
-    function actualizarHistorial() {
-        var historialDiv = document.getElementById("historial");
-        historialDiv.innerHTML = "";
-
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", "php/pesofetalpalf_guardar_mostrar.php", true);
-        xhr.onload = function() {
-            if (xhr.status >= 200 && xhr.status < 400) {
-                var historialDatos = JSON.parse(xhr.responseText);
-                historialDatos.forEach((item) => {
-                    var nuevoRegistro = document.createElement("div");
-                    nuevoRegistro.classList.add("history-item");
-                    nuevoRegistro.innerHTML = `
-                        <p><b>Registro ${item.id}:</b></p>
-                        <p>PA: ${item.pa} mm</p>
-                        <p>LF: ${item.lf} mm</p>
-                        <p>Peso Estimado: ${item.pesoEstimado} gramos</p>
-                        <p>Fecha de Calculo: ${new Date(item.fechaCalculo).toLocaleDateString()}</p>`;
-                    historialDiv.appendChild(nuevoRegistro);
-                });
-            } else {
-                console.error("Error al obtener el historial.");
-            }
-        };
-        xhr.onerror = function() {
-            console.error("Error de red al obtener el historial.");
-        };
-        xhr.send();
-    }
-
-    // Llama a actualizarHistorial() al cargar la página
-    window.onload = function() {
-        actualizarHistorial();
-    };
-</script>
+            historialPesos.forEach((item) => {
+                let nuevoRegistro = document.createElement("div");
+                nuevoRegistro.classList.add("history-item");
+                nuevoRegistro.innerHTML = `
+                    <p>📌 <b>Registro ${item.id}:</b></p>
+                    <p>📏 <b>PA:</b> ${item.pa} mm</p>
+                    <p>📐 <b>LF:</b> ${item.lf} mm</p>
+                    <p>⚖️ <b>Peso Fetal:</b> ${item.pesoFetal} g</p>
+                `;
+                historialDiv.appendChild(nuevoRegistro);
+            });
+        }
+    </script>
 </body>
 </html>
