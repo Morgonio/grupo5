@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Riesgo Cardiovascular</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e3f2fd;
+            text-align: center;
+            padding: 20px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            gap: 20px;
+        }
+        .container, .history-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+        h1, h3 {
+            color: #1976d2;
+            font-size: 20px;
+        }
+        input, select, button {
+            width: 90%;
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 5px;
+            border: 1px solid #64b5f6;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #42a5f5;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        button:hover {
+            background-color: #1976d2;
+        }
+        #resultado {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #1976d2;
+        }
+        .history-container {
+            display: block;
+            position: relative;
+        }
+        .close-btn {
+            font-size: 24px;
+            color: #d32f2f;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .history-list {
+            font-size: 14px;
+            color: #333;
+            text-align: left;
+            max-height: 550px;
+            overflow-y: auto;
+        }
+        .history-item {
+            background: #dcedc8;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>❤️ Calculadora de Riesgo Cardiovascular</h1>
+        <label for="edad">Edad:</label>
+        <input type="number" id="edad">
+        <label for="sexo">Sexo:</label>
+        <select id="sexo">
+            <option value="masculino">Masculino</option>
+            <option value="femenino">Femenino</option>
+        </select>
+        <label for="fumador">¿Fuma?:</label>
+        <select id="fumador">
+            <option value="si">Sí</option>
+            <option value="no">No</option>
+        </select>
+        <label for="colesterol">Colesterol total (mg/dl):</label>
+        <input type="number" id="colesterol">
+        <label for="hdl">Colesterol HDL (mg/dl):</label>
+        <input type="number" id="hdl">
+        <label for="presion">Presión arterial sistólica (mmHg):</label>
+        <input type="number" id="presion">
+        <button onclick="calcularRiesgoCardiovascular()">Calcular Riesgo</button>
+        <button onclick="verHistorial()">Ver Historial</button>
+        <p id="resultado"></p>
+    </div>
+    <div class="history-container" id="historialContainer">
+        <h3>📜 Historial de Cálculos <span class="close-btn" onclick="cerrarHistorial()">×</span></h3>
+        <div class="history-list" id="historial"></div>
+    </div>
+    <script>
+        let historialRiesgo = [];
+        let contadorHistorial = 1;
+        
+        function calcularRiesgoCardiovascular() {
+            var edad = parseInt(document.getElementById("edad").value);
+            var sexo = document.getElementById("sexo").value;
+            var fumador = document.getElementById("fumador").value;
+            var colesterol = parseInt(document.getElementById("colesterol").value);
+            var hdl = parseInt(document.getElementById("hdl").value);
+            var presion = parseInt(document.getElementById("presion").value);
+            
+            if (isNaN(edad) || isNaN(colesterol) || isNaN(hdl) || isNaN(presion)) {
+                document.getElementById("resultado").innerHTML = "Por favor, ingresa valores válidos en todos los campos.";
+                return;
+            }
+            
+            var riesgo = (edad * 0.2) + (colesterol / 50) - (hdl / 30) + (presion / 30) + (fumador === "si" ? 5 : 0);
+            
+            var mensaje;
+            if (riesgo < 5) mensaje = "Bajo riesgo cardiovascular.";
+            else if (riesgo < 10) mensaje = "Riesgo moderado.";
+            else mensaje = "Alto riesgo cardiovascular. Consulta a un médico.";
+            
+            document.getElementById("resultado").innerHTML = mensaje;
+            
+            historialRiesgo.push({ id: contadorHistorial, edad, sexo, colesterol, hdl, presion, fumador, riesgo: mensaje });
+            contadorHistorial++;
+            actualizarHistorial();
+        }
+
+        function verHistorial() {
+            document.getElementById("historialContainer").style.display = "block";
+        }
+
+        function cerrarHistorial() {
+            document.getElementById("historialContainer").style.display = "none";
+        }
+
+        function actualizarHistorial() {
+            var historialDiv = document.getElementById("historial");
+            historialDiv.innerHTML = "";
+            historialRiesgo.forEach((item) => {
+                var nuevoRegistro = document.createElement("div");
+                nuevoRegistro.classList.add("history-item");
+                nuevoRegistro.innerHTML = `<p>📌 <b>Registro ${item.id}:</b></p>
+                    <p>📅 <b>Edad:</b> ${item.edad} años</p>
+                    <p>⚤ <b>Sexo:</b> ${item.sexo}</p>
+                    <p>🩸 <b>Colesterol:</b> ${item.colesterol} mg/dl</p>
+                    <p>💙 <b>HDL:</b> ${item.hdl} mg/dl</p>
+                    <p>⏳ <b>Presión:</b> ${item.presion} mmHg</p>
+                    <p>🚬 <b>Fuma:</b> ${item.fumador}</p>
+                    <p>⚠️ <b>Riesgo:</b> ${item.riesgo}</p>`;
+                historialDiv.appendChild(nuevoRegistro);
+            });
+        }
+    </script>
+</body>
+</html>
+
