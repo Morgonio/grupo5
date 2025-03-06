@@ -12,13 +12,15 @@ if ($conn->connect_error) {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Guardar datos
-    $sistolica = $_POST["sistolica"];
-    $diastolica = $_POST["diastolica"];
-    $clasificacion = $_POST["clasificacion"];
+    $genero = $_POST["genero"];
+    $peso = $_POST["peso"];
+    $altura = $_POST["altura"];
+    $imc = $_POST["imc"];
+    $categoria = $_POST["categoria"];
 
-    $sql = "INSERT INTO CalculoPresionArterial (sistolica, diastolica, clasificacion) VALUES (?, ?, ?)";
+    $sql = "INSERT INTO CalculoIMC (genero, peso, altura, imc, categoria) VALUES (?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("iis", $sistolica, $diastolica, $clasificacion);
+    $stmt->bind_param("sddds", $genero, $peso, $altura, $imc, $categoria);
 
     if ($stmt->execute()) {
         echo json_encode(["message" => "Datos guardados correctamente"]);
@@ -29,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->close();
 } elseif ($_SERVER["REQUEST_METHOD"] == "GET") {
     // Obtener historial
-    $sql = "SELECT * FROM CalculoPresionArterial ORDER BY fechaCalculo DESC";
+    $sql = "SELECT * FROM CalculoIMC ORDER BY fecha DESC";
     $result = $conn->query($sql);
 
     $historial = array();
@@ -43,4 +45,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 $conn->close();
-?>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        main {
+            font-family: Arial, sans-serif;
+            background-color: #cce7ff;
+            text-align: center;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .containerDiabetes, .history-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 300px;
+            position: relative;
+        }
+        .history-container {
+            display: none;
+        }
+        h1, h3 {
+            color: #007acc;
+            font-size: 20px;
+        }
+        input, select, button {
+            width: 90%;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007acc;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        button:hover {
+            background-color: #005fa3;
+        }
+        #resultado {
+            margin-top: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #007acc;
+        }
+        .history-list {
+            font-size: 14px;
+            color: #333;
+            text-align: left;
+            max-height: 510px;
+            overflow-y: auto;
+        }
+        .history-item {
+            background: #e0f2ff;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            border-bottom: 1px solid #ccc;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: red;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="containerDiabetes">
+        <h1>📊 Calculadora de Riesgo de Diabetes</h1>
+        <label for="edad"><i class="fas fa-calendar-alt"></i> Edad:</label>
+        <input type="number" id="edad" name="edad" required>
+
+        <label for="peso"><i class="fas fa-weight"></i> Peso (kg):</label>
+        <input type="number" id="peso" name="peso" required>
+
+        <label for="altura"><i class="fas fa-ruler-vertical"></i> Altura (m):</label>
+        <input type="number" id="altura" name="altura" step="0.01" required>
+
+        <label for="antecedentes"><i class="fas fa-user-md"></i> Antecedentes familiares:</label>
+        <select id="antecedentes" name="antecedentes">
+            <option value="si">Sí</option>
+            <option value="no">No</option>
+        </select>
+
+        <button onclick="calcularRiesgoDiabetes()">📊 Calcular Riesgo</button>
+        <button onclick="GuardarDiabetes()"> Guardar</button>
+        <button onclick="mostrarHistorialDiabetes()">📜 Ver Historial</button>
+        <p id="resultado"></p>
+    </div>
+    
+    <div class="history-container" id="historialContainer">
+        <button class="close-btn" onclick="cerrarHistorialDiabetes()">X</button>
+        <h3>📜 Historial de Cálculos</h3>
+        <div class="history-list" id="historial"></div>
+    </div>
+</body>
+</html>
+

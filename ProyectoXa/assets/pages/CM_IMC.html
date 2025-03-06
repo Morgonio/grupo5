@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora de IMC</title>
     <style>
-        body {
+        main {
             font-family: Arial, sans-serif;
             background-color: #e8f5e9;
             text-align: center;
@@ -16,7 +16,7 @@
             flex-wrap: wrap;
             gap: 15px;
         }
-        .container, .history-container {
+        .containerIMC, .history-container {
             background: white;
             padding: 20px;
             border-radius: 10px;
@@ -87,10 +87,10 @@
             color: #b71c1c;
         }
         @media (min-width: 768px) {
-            body {
+            main {
                 flex-direction: row;
             }
-            .container, .history-container {
+            .containerIMC, .history-container {
                 max-width: 350px;
             }
         }
@@ -172,7 +172,7 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="containerIMC">
         <h1>Calculadora de IMC</h1>
 
         <div class="gender-selection">
@@ -193,7 +193,8 @@
         <input type="number" id="altura" name="altura" min="1.2" max="2.2" step="0.01">
 
         <button onclick="calcularIMC()">Calcular IMC</button>
-        <button onclick="verHistorial()">Ver Historial</button>
+        <button onclick="GuardarIMC()">Guardar IMC</button>
+        <button onclick="verHistorialIMC()">Ver Historial</button>
 
         <p id="error" class="mensaje-error" style="display:none;">Por favor, completa todos los campos.</p>
 
@@ -214,122 +215,9 @@
 
     <div class="history-container" id="historialContainer" style="display: none;">
         <h3>📜 Historial de IMC
-            <span class="close-btn" onclick="cerrarHistorial()">×</span>
+            <span class="close-btn" onclick="cerrarHistorialIMC()">×</span>
         </h3>
         <div class="history-list" id="historial"></div>
     </div>
-
-    <script>
-    let generoSeleccionado = '';
-
-    function selectGender(gender) {
-        document.querySelectorAll('.gender').forEach(genderDiv => genderDiv.classList.remove('selected'));
-        document.getElementById(gender).parentElement.classList.add('selected');
-        generoSeleccionado = gender;
-    }
-
-    function calcularIMC() {
-        var peso = document.getElementById("peso").value;
-        var altura = document.getElementById("altura").value;
-
-        if (!peso || !altura || !generoSeleccionado) {
-            document.getElementById("error").style.display = "block";
-            return;
-        }
-
-        document.getElementById("error").style.display = "none";
-
-        var imc = peso / (altura * altura);
-        var imcFixed = imc.toFixed(1);
-
-        var categoria = obtenerCategoriaIMC(imc);
-
-        var marker = document.getElementById("marker");
-
-        var percentage = 0;
-        if (imc < 18.5) {
-            percentage = ((imc - 15) / (18.5 - 15)) * 25;
-        } else if (imc >= 18.5 && imc < 24.9) {
-            percentage = 25 + ((imc - 18.5) / (24.9 - 18.5)) * 25;
-        } else if (imc >= 25 && imc < 29.9) {
-            percentage = 50 + ((imc - 25) / (29.9 - 25)) * 25;
-        } else {
-            percentage = 75 + ((imc - 30) / (40 - 30)) * 25;
-        }
-
-        percentage = Math.max(0, Math.min(100, percentage));
-        marker.style.left = percentage + "%";
-        marker.innerText = `IMC: ${imcFixed}`;
-
-        document.querySelector('.imc-bar').style.display = 'flex';
-
-        // Enviar datos al servidor
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "php/imc_guardar_mostar.php", true);
-        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        xhr.onload = function() {
-            if (xhr.status >= 200 && xhr.status < 400) {
-                console.log(xhr.responseText); // Opcional: muestra la respuesta del servidor
-            } else {
-                console.error("Error al guardar datos.");
-            }
-        };
-        xhr.onerror = function() {
-            console.error("Error de red al guardar datos.");
-        };
-        var params = "genero=" + generoSeleccionado + "&peso=" + peso + "&altura=" + altura + "&imc=" + imcFixed + "&categoria=" + categoria;
-        xhr.send(params);
-    }
-
-    function obtenerCategoriaIMC(imc) {
-        if (imc < 18.5) {
-            return 'Bajo peso';
-        } else if (imc >= 18.5 && imc < 24.9) {
-            return 'Saludable';
-        } else if (imc >= 25 && imc < 29.9) {
-            return 'Sobrepeso';
-        } else {
-            return 'Obesidad';
-        }
-    }
-
-    function verHistorial() {
-        var historialContainer = document.getElementById("historialContainer");
-        var historialDiv = document.getElementById("historial");
-        historialDiv.innerHTML = "";
-
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", "php/imc_guardar_mostar.php", true);
-        xhr.onload = function() {
-            if (xhr.status >= 200 && xhr.status < 400) {
-                var historialDatos = JSON.parse(xhr.responseText);
-                historialDatos.forEach((item) => {
-                    var nuevoRegistro = document.createElement("div");
-                    nuevoRegistro.classList.add("history-item");
-                    nuevoRegistro.innerHTML = `
-                        <p>📌 <b>Registro ${item.id}:</b></p>
-                        <p>👫 <b>Género:</b> ${item.genero.charAt(0).toUpperCase() + item.genero.slice(1)}</p>
-                        <p>⚖️ <b>Peso:</b> ${item.peso} kg</p>
-                        <p>📏 <b>Altura:</b> ${item.altura} m</p>
-                        <p>🔥 <b>IMC:</b> ${item.imc}</p>
-                        <p>🔥 <b>Estado:</b> ${item.categoria}</p>
-                        <p>📅 <b>Fecha:</b> ${item.fecha}</p>`;
-                    historialDiv.appendChild(nuevoRegistro);
-                });
-                historialContainer.style.display = "block";
-            } else {
-                console.error("Error al obtener el historial.");
-            }
-        };
-        xhr.onerror = function() {
-            console.error("Error de red al obtener el historial.");
-        };
-        xhr.send();
-    }
-
-    function cerrarHistorial() {
-        document.getElementById("historialContainer").style.display = "none";
-    }
-</script>
 </body>
 </html>

@@ -16,7 +16,7 @@ $result = $conn->query($sql);
 $historial = array(); // Inicializamos un array para almacenar los datos
 
 if ($result->num_rows > 0) {
-    while($row = $result->fetch_assoc()) {
+    while ($row = $result->fetch_assoc()) {
         $historial[] = $row; // Añadimos cada fila al array
     }
 }
@@ -25,4 +25,3 @@ $conn->close();
 
 header('Content-Type: application/json'); // Indicamos que la respuesta es JSON
 echo json_encode($historial); // Enviamos el array como JSON
-?>

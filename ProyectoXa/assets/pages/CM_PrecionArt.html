@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        main {
+            font-family: Arial, sans-serif;
+            background-color: #e3f2fd;
+            text-align: center;
+            padding: 20px;
+        }
+		main {
+            font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;
+        }
+        .contenedorPrecionArterial {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+        .calculadora, .historial {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 350px;
+            border: 3px solid #c5d3f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 555px;
+            position: relative;
+        }
+        h1 {
+            color: #007bb5;
+            font-size: 20px;
+        }
+        .image-container img {
+            width: 100px;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+        button {
+            background-color: #007bb5;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005f8b;
+        }
+        .historial {
+            overflow-y: auto;
+            max-height: 400px;
+            display: none;
+            position: relative;
+        }
+        .registro {
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+            color: #333; /* A?adido: Color de texto para los registros */
+        }
+        #historial-lista {
+            width: 100%;
+            color: #333; /* A?adido: Color de texto para la lista */
+        }
+        .cerrar-historial {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: red;
+            color: white;
+            border: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        @media (min-width: 768px) {
+            .contenedorPrecionArterial {
+                flex-wrap: nowrap;
+            }
+            .calculadora, .historial {
+                width: 45%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="contenedorPrecionArterial">
+        <div class="calculadora">
+            <div class="image-container">
+                <img src="https://cdn-icons-png.flaticon.com/512/2995/2995347.png" alt="Icono de Presion arterial">
+            </div>
+            <h1>?? Calculadora de Presion Arterial</h1>
+            <label for="sistolica">?? Presion sistolica (mmHg):</label>
+            <input type="number" id="sistolica"><br>
+            <label for="diastolica">?? Presion diastolica (mmHg):</label>
+            <input type="number" id="diastolica"><br>
+            <button onclick="clasificarPresion()">?? Clasificar Presion</button>
+            <button onclick="GuardarPresion()">?? Guardar</button>
+            <button onclick="verHistorialPrecionArterial()">?? Ver Historial</button>
+            <p id="resultado"></p>
+        </div>
+        <div class="historial" id="historial">
+            <button class="cerrar-historial" onclick="cerrarHistorialPrecionArterial()">��</button>
+            <h1>?? Historial de C��lculos</h1>
+            <div id="historial-lista">
+                <p id="mensaje-historial">A��n no hay registros.</p>
+            </div>
+        </div>
+    </div>
+</html>

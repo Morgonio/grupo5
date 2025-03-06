@@ -30,7 +30,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     $stmt->close();
-} elseif ($_SERVER["REQUEST_METHOD"] == "GET") {
+}
+ 
+if ($_SERVER["REQUEST_METHOD"] == "GET") {
     // Obtener historial
     $sql = "SELECT * FROM CalculoRiesgoDiabetes ORDER BY fecha DESC";
     $result = $conn->query($sql);
